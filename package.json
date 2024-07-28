@@ -42,6 +42,10 @@
       ]
     }
   },
+  "workspaces": [
+    "src/ext",
+    "src/webview"
+  ],
   "scripts": {
     "vscode:prepublish": "npm run package",
     "compile": "webpack",
@@ -52,7 +56,11 @@
     "pretest": "npm run compile-tests && npm run compile && npm run lint",
     "lint": "eslint src/ext --ext ts",
     "test": "vscode-test",
-    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
+    "build": "npm run build:extension && npm run build:webview",
+    "build:extension": "webpack --config webpack.config.js",
+    "build:webview": "npm run --workspace=src/webview build",
+    "start:webview": "npm run --workspace=src/webview start"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.6",
@@ -62,10 +70,13 @@
     "@typescript-eslint/parser": "^7.7.1",
     "@vscode/test-cli": "^0.0.9",
     "@vscode/test-electron": "^2.3.9",
+    "css-loader": "^7.1.2",
     "eslint": "^8.57.0",
     "prettier": "^3.3.3",
+    "style-loader": "^4.0.0",
     "ts-loader": "^9.5.1",
     "typescript": "^5.4.5",
+    "url-loader": "^4.1.1",
     "webpack": "^5.91.0",
     "webpack-cli": "^5.1.4"
   }

@@ -45,4 +45,54 @@ const extensionConfig = {
     level: "log", // enables logging required for problem matchers
   },
 };
-module.exports = [ extensionConfig ];
+
+/** @type WebpackConfig */
+const webviewConfig = {
+	target: 'web',
+	entry: './src/webview/src/index.tsx',
+	output: {
+	  filename: '[name].wv.js',
+	  path: path.resolve(__dirname, 'dist', 'webview'),
+	},
+	resolve: {
+	  extensions: ['.js', '.ts', '.tsx'],
+	},
+	module: {
+	  rules: [
+		{ test: /\.(js|ts|jsx|tsx)?$/, use: ['babel-loader', 'ts-loader'] },
+		{
+		  test: /\.css$/,
+		  use: ['style-loader', 'css-loader'],
+		},
+		{
+			test: /\.(jpg|jpeg|png|webp)?$/,
+			use: [
+				{
+					loader: 'url-loader',
+					options: {
+						limit: 8192, // 8KB size limit for inlining
+						fallback: 'file-loader', // fallback to file-loader if above limit
+						name: '[name].[hash].[ext]', // name pattern for output files
+						outputPath: 'assets/images/', // output path for the images
+					},
+				},
+			],
+		},
+		{
+			test: /\.svg$/,
+			use: [
+				'@svgr/webpack',
+				{
+					loader: 'url-loader',
+					options: {
+						limit: 8192,
+						name: '[name].[hash].[ext]',
+						outputPath: 'assets/images/',
+					},
+				},
+			],
+		}
+	  ],
+	},
+};
+module.exports = [ extensionConfig, webviewConfig ];

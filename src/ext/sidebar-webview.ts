@@ -49,12 +49,28 @@ export class SidebarWebview implements WebviewViewProvider {
   }
 
   private _getHtmlForWebview(webview: Webview) {
+    const scriptUri = webview.asWebviewUri(
+      Uri.joinPath(this.extensionPath, 'dist', 'webview', 'main.wv.js')
+    );
+
     // Use a nonce to only allow specific scripts to be run
     const nonce = Utils.getNonce();
 
     // Basic HTML structure
     return `
-        	<h1>Hello</h1>
-    	`;
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+          <meta charset="UTF-8">
+          <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'nonce-${nonce}'; style-src 'unsafe-inline'; img-src 'self' data:;">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Webview</title>
+      </head>
+      <body>
+        <div id="root"></div>
+        <script nonce="${nonce}" src="${scriptUri}"></script>
+      </body>
+      </html>
+    `;
   }
 }
